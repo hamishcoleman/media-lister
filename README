@@ -1,0 +1,8 @@
+With the goal of watching recorded TV and Movies, I find it annoying that the
+computer doesnt remember which files I have already watched.  I used to solve
+this with XBMC/Kodi, but recently it has been flakey.
+
+This repository contains a small, simple media discovery and listing program
+that will mark the files with seen/unseen and help finding the next unseen
+file.
+
