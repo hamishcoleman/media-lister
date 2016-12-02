@@ -55,11 +55,26 @@ sub RenderValue {
     my $self = shift;
     my $listbox = shift;
 
+    my $filename = $self->{filename};
+
     # FIXME - if raspberry pi, use omxplayer
-    # omxplayer -o hdmi --blank --sid 10 %p
 
     $listbox->root()->leave_curses();
-    system("mplayer",$self->{filename});
+    if ($filename =~ /\.jpg$/i) {
+        # a still image
+        system("feh","-.",$filename);
+    } else {
+        # a movie
+        # HACK! want a better test for raspberry pi
+        if ( -e '/usr/bin/omxplayer' ) {
+            system('omxplayer','-o','hdmi','--blank','--sid','10',$filename);
+        } else {
+            system("mplayer",$filename);
+        }
+    }
+    # TODO
+    # - add txt,xml,json, etc using a text viewer
+
     my $result = $?;
     $listbox->root()->reset_curses();
 
