@@ -63,6 +63,12 @@ sub RenderValue {
     if ($filename =~ /\.jpg$/i) {
         # a still image
         system("feh","-.",$filename);
+    } elsif ($filename =~ /\.(nfo|txt)$/i) {
+        # a text file
+        system("less","-+F",$filename);
+    } elsif ($filename =~ /\.(json)$/i) {
+        # a json file
+        system("json_pp <$filename |less -S");
     } else {
         # a movie
         # HACK! want a better test for raspberry pi
@@ -73,7 +79,7 @@ sub RenderValue {
         }
     }
     # TODO
-    # - add txt,xml,json, etc using a text viewer
+    # - add xml, etc using a text viewer
 
     my $result = $?;
     $listbox->root()->reset_curses();
