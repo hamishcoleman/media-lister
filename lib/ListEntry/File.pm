@@ -16,8 +16,6 @@ sub new {
     # TODO - file must exist
     $self->{filename} = $filename;
 
-    $self->{cui} = shift;
-
     return $self;
 }
 
@@ -60,9 +58,9 @@ sub RenderValue {
     # FIXME - if raspberry pi, use omxplayer
     # omxplayer -o hdmi --blank --sid 10 %p
 
-    $self->{cui}->leave_curses();
+    $listbox->root()->leave_curses();
     system("mplayer '".$self->{filename}."'");
-    $self->{cui}->reset_curses();
+    $listbox->root()->reset_curses();
 
     $self->seen(1);
     # TODO - could just render the one label

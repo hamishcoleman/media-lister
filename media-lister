@@ -84,20 +84,12 @@ sub draw_top {
     $cui->mainloopExit();
 }
 
-sub make_files {
-    my @array;
-    while (my $filename = shift) {
-        push @array, ListEntry::File->new($filename,$cui);
-    }
-    return @array;
-}
-
-sub make_subdirs {
-    my $seenlist = SeenList->new();
+sub make_objects {
+    my $seenlist = shift;
 
     my @array;
     while (my $filename = shift) {
-        my $object = ListEntry::SubDir->new($filename,$cui);
+        my $object = ListEntry::SubDir->new_from_name($filename);
         $object->seenlist($seenlist);
         push @array, $object;
     }
@@ -110,7 +102,8 @@ sub main {
 
     $cui = new Curses::UI ( -color_support => 1 );
 
-    my @files = make_subdirs(@ARGV);
+    my $seenlist = SeenList->new();
+    my @files = make_objects($seenlist,@ARGV);
     draw_top(@files);
 
     $cui->mainloop;

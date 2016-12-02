@@ -19,9 +19,20 @@ sub new {
     # TODO - file must exist
     $self->{subdir} = $subdir;
 
-    $self->{cui} = shift;
-
     return $self;
+}
+
+sub new_from_name {
+    my $class = shift;
+    my $filename = shift;
+
+    my $object;
+    if ( -d $filename ) {
+        $object = $class->new($filename);
+    } else {
+        $object = ListEntry::File->new($filename);
+    }
+    return $object;
 }
 
 sub seenlist {
@@ -44,14 +55,8 @@ sub RenderValue {
 
     my @array;
     push @array, ListEntry::PopValues->new();
-
     for (sort glob($self->{subdir}.'/*')) {
-        my $object;
-        if ( -d $_ ) {
-            $object = ListEntry::SubDir->new($_,$self->{cui});
-        } else {
-            $object = ListEntry::File->new($_,$self->{cui});
-        }
+        my $object = ListEntry::SubDir->new_from_name($_);
         $object->seenlist($self->{seenlist});
         push @array, $object;
     }
