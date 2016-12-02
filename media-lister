@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+#
+#
+#
+
+use File::Spec;
+
+# allow the libs to be in the bin dir
+use FindBin;
+use lib File::Spec->catdir($FindBin::RealBin,"lib");
+
+use HC::Common;
+
+use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1;
+$Data::Dumper::Quotekeys = 0;
+
+use Curses::UI;
+use Curses qw(KEY_LEFT KEY_RIGHT);
+
+use ListEntry::File;
+use ListEntry::SubDir;
+
+my $option = {
+    mediadir => '.',
+};
+my @option_list = (
+    "mediadir=s",
+);
+
+my $cui;
+
+sub draw_listbox {
+    my $window_name = shift;
+    my @list = @_;
+
+    my $listwin = $cui->add($window_name, 'Window');
+    my $top_bar = $listwin->add( 'top_bar', 'Label',
+        -fg => 'cyan',
+        -bg => 'blue',
+    );
+    # label windows are screenwidth, unless there is no text when it is added..
+    $top_bar->text('q:Quit  <ENTER> view item');
+
+    my $listbox = $listwin->add(
+        'message_list', 'HC::Curses::UI::Listbox::Object',
+        -values => \@list,
+        -vscrollbar => 1,
+        -padtop => 1,
+    );
+
+    # why do I need to grub around in the structures to clear specific keysyms?
+    for (qw(h l 1 0 y n)) {
+        delete $listbox->{-bindings}{$_};
+    }
+    delete $listbox->{-bindings}{' '};
+    #delete $listbox->{-bindings}{KEY_LEFT()};
+    #delete $listbox->{-bindings}{KEY_RIGHT()};
+
+    $listbox->set_binding(sub{exit(0)}, 'q');
+    $listbox->set_binding(sub{(shift)->PopValues()}, KEY_LEFT());
+}
+
+sub draw_top {
+    my @list = @_;
+
+    draw_listbox('top_menu',@list);
+
+    $cui->mainloopExit();
+}
+
+sub make_files {
+    my @array;
+    while (my $filename = shift) {
+        push @array, ListEntry::File->new($filename,$cui);
+    }
+    return @array;
+}
+
+sub make_subdirs {
+    my @array;
+    while (my $filename = shift) {
+        push @array, ListEntry::SubDir->new($filename,$cui);
+    }
+    return @array;
+}
+
+sub main {
+    HC::Common::do_options($option,@option_list);
+    return if (defined($option->{help}));
+
+    $cui = new Curses::UI ( -color_support => 1 );
+
+    my @files = make_subdirs(@ARGV);
+    draw_top(@files);
+
+    $cui->mainloop;
+}
+main();
+
+
