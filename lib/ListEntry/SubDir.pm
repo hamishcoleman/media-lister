@@ -6,6 +6,7 @@ use strict;
 #
 
 use File::Basename;
+use File::Glob ':bsd_glob';
 
 use ListEntry::File;
 use ListEntry::PopValues;
@@ -55,7 +56,8 @@ sub RenderValue {
 
     my @array;
     push @array, ListEntry::PopValues->new();
-    for (sort glob($self->{subdir}.'/*')) {
+
+    for (bsd_glob($self->{subdir}.'/*',GLOB_TILDE|GLOB_NOCHECK)) {
         my $object = ListEntry::SubDir->new_from_name($_);
         $object->seenlist($self->{seenlist});
         push @array, $object;
