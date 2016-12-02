@@ -23,6 +23,7 @@ use Curses qw(KEY_LEFT KEY_RIGHT);
 
 use ListEntry::File;
 use ListEntry::SubDir;
+use SeenList;
 
 my $option = {
     mediadir => '.',
@@ -62,6 +63,16 @@ sub draw_listbox {
 
     $listbox->set_binding(sub{exit(0)}, 'q');
     $listbox->set_binding(sub{(shift)->PopValues()}, KEY_LEFT());
+    $listbox->set_binding(sub{
+        my $listbox = shift;
+        my $object = $listbox->get_active_value();
+        if ($object->can('toggleseen')) {
+            $object->toggleseen();
+            $listbox->RenderLabels();
+            $listbox->{-ypos} = $listbox->get_active_id() +1;
+            $listbox->schedule_draw(1);
+        }
+    }, 'w');
 }
 
 sub draw_top {
@@ -81,9 +92,13 @@ sub make_files {
 }
 
 sub make_subdirs {
+    my $seenlist = SeenList->new();
+
     my @array;
     while (my $filename = shift) {
-        push @array, ListEntry::SubDir->new($filename,$cui);
+        my $object = ListEntry::SubDir->new($filename,$cui);
+        $object->seenlist($seenlist);
+        push @array, $object;
     }
     return @array;
 }

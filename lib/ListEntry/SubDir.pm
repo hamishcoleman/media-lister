@@ -24,6 +24,11 @@ sub new {
     return $self;
 }
 
+sub seenlist {
+    my $self = shift;
+    $self->{seenlist} = shift;
+}
+
 sub RenderLabel {
     my $self = shift;
 
@@ -41,11 +46,14 @@ sub RenderValue {
     push @array, ListEntry::PopValues->new();
 
     for (sort glob($self->{subdir}.'/*')) {
+        my $object;
         if ( -d $_ ) {
-            push @array, ListEntry::SubDir->new($_,$self->{cui});
+            $object = ListEntry::SubDir->new($_,$self->{cui});
         } else {
-            push @array, ListEntry::File->new($_,$self->{cui});
+            $object = ListEntry::File->new($_,$self->{cui});
         }
+        $object->seenlist($self->{seenlist});
+        push @array, $object;
     }
 
     $listbox->PushValues($self->{subdir});
