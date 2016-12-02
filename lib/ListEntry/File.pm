@@ -59,14 +59,18 @@ sub RenderValue {
     # omxplayer -o hdmi --blank --sid 10 %p
 
     $listbox->root()->leave_curses();
-    system("mplayer '".$self->{filename}."'");
+    system("mplayer",$self->{filename});
+    my $result = $?;
     $listbox->root()->reset_curses();
 
-    $self->seen(1);
-    # TODO - could just render the one label
-    $listbox->RenderLabels();
-    $listbox->{-ypos} = $listbox->get_active_id() +1;
-    $listbox->schedule_draw(1);
+    if ($result == 0) {
+        # no errors
+        $self->seen(1);
+        # TODO - could just render the one label
+        $listbox->RenderLabels();
+        $listbox->{-ypos} = $listbox->get_active_id() +1;
+        $listbox->schedule_draw(1);
+    }
 }
 
 1;
