@@ -65,6 +65,7 @@ sub RenderValue {
     $self->{cui}->reset_curses();
 
     $self->seen(1);
+    # TODO - could just render the one label
     $listbox->RenderLabels();
     $listbox->schedule_draw(1);
 

@@ -68,6 +68,7 @@ sub draw_listbox {
         my $object = $listbox->get_active_value();
         if ($object->can('toggleseen')) {
             $object->toggleseen();
+            # TODO - could just render the one label
             $listbox->RenderLabels();
             $listbox->{-ypos} = $listbox->get_active_id() +1;
             $listbox->schedule_draw(1);
