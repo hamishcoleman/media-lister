@@ -40,7 +40,7 @@ sub RenderValue {
     my @array;
     push @array, ListEntry::PopValues->new();
 
-    for (glob($self->{subdir}.'/*')) {
+    for (sort glob($self->{subdir}.'/*')) {
         if ( -d $_ ) {
             push @array, ListEntry::SubDir->new($_,$self->{cui});
         } else {
@@ -48,9 +48,10 @@ sub RenderValue {
         }
     }
 
-    $listbox->PushValues();
+    $listbox->PushValues($self->{subdir});
     $listbox->values(\@array);
     $listbox->RenderLabels();
+    $listbox->UseLastSelection($self->{subdir});
 }
 
 1;
