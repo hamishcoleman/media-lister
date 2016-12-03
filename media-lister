@@ -44,7 +44,7 @@ sub draw_listbox {
         -bg => 'blue',
     );
     # label windows are screenwidth, unless there is no text when it is added..
-    $top_bar->text('q:Quit  <ENTER> view item');
+    $top_bar->text('q:Quit  w:Toggle Watched  <LEFT> Previous screen  <ENTER> view item');
 
     my $listbox = $listwin->add(
         'message_list', 'HC::Curses::UI::Listbox::Object',
