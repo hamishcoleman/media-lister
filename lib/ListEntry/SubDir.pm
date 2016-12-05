@@ -19,6 +19,7 @@ sub new {
     my $subdir = shift;
     # TODO - file must exist
     $self->{subdir} = $subdir;
+    $self->use_basename(1);
 
     return $self;
 }
@@ -41,13 +42,24 @@ sub seenlist {
     $self->{seenlist} = shift;
 }
 
+sub use_basename {
+    my $self = shift;
+    my $value = shift;
+    $self->{use_basename} = $value;
+}
+
 sub RenderLabel {
     my $self = shift;
 
     my $watched = ' ';
-    my $basename = basename($self->{subdir});
+    my $dispname;
+    if ($self->{use_basename}) {
+        $dispname = basename($self->{subdir});
+    } else {
+        $dispname = $self->{subdir};
+    }
 
-    return $watched.' '.$basename.'/';
+    return $watched.' '.$dispname.'/';
 }
 
 sub RenderValue {

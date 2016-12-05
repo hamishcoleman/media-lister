@@ -23,6 +23,7 @@ use Curses qw(KEY_LEFT KEY_RIGHT);
 
 use ListEntry::File;
 use ListEntry::SubDir;
+use ListEntry::RecentSubdir;
 use SeenList;
 
 my $option = {
@@ -88,6 +89,11 @@ sub make_objects {
     my $seenlist = shift;
 
     my @array;
+
+    my $recent_subdir = ListEntry::RecentSubdir->new();
+    $recent_subdir->seenlist($seenlist);
+    push @array, $recent_subdir;
+
     while (my $filename = shift) {
         my $object = ListEntry::SubDir->new_from_name($filename);
         $object->seenlist($seenlist);

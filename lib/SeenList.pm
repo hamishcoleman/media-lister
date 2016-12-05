@@ -6,6 +6,7 @@ use strict;
 #
 
 use File::Path qw(make_path);
+use File::Basename;
 use FileHandle;
 
 sub new {
@@ -69,6 +70,11 @@ sub seen {
 
     if (defined($value)) {
         $self->{seen}{$name} = $value;
+
+        # Quick and dirty "recent subdirs" tracker
+        my $dirname = dirname($name);
+        $self->{recent_dirs}{$dirname} = $self->{recent_dirs_nr}++;
+
         if (!defined($nolog)) {
             $self->log($name,$value);
         }
