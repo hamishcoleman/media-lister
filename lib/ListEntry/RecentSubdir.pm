@@ -41,7 +41,7 @@ sub RenderValue {
     my @array;
     push @array, ListEntry::PopValues->new();
 
-    my @recent = sort { $recent->[$b] cmp $recent->[$a] } keys(%{$recent});
+    my @recent = sort { $recent->{$b} cmp $recent->{$a} } keys(%{$recent});
     for (@recent) {
         my $object = ListEntry::SubDir->new_from_name($_);
         $object->seenlist($seenlist);
