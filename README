@@ -22,6 +22,5 @@ While it is a working system, the following features would be nice:
 - persist the "__last_pos" cache from the HC::Curses::UI::Listbox::Object
 - if there is no __last_pos cache, but there are watched files,
   position the cursor on the first unwatched file
-- use the seenlog as a source of directories for "Recently Watched"
-    - bonus points for removing directories that have no unwatched files
+- remove directories that have no unwatched files from the "Recent Subdirs"
 
