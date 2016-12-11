@@ -21,6 +21,8 @@ $Data::Dumper::Quotekeys = 0;
 use Curses::UI;
 use Curses qw(KEY_LEFT KEY_RIGHT);
 
+use POSIX;
+
 use ListEntry::File;
 use ListEntry::SubDir;
 use ListEntry::RecentSubdir;
@@ -40,6 +42,22 @@ sub draw_listbox {
     my @list = @_;
 
     my $listwin = $cui->add($window_name, 'Window');
+
+    my $clock_bar = $listwin->add( 'clock_bar', 'Label',
+        -bg => 'cyan',
+        -fg => 'blue',
+        -x => -1,
+        -width => 5,
+    );
+    # label windows are screenwidth, unless there is no text when it is added..
+    $clock_bar->text('88:88');
+
+    $cui->set_timer('clock',sub {
+        $clock_bar->text(strftime("%H:%M",localtime(time)));
+        $cui->draw(1);},
+        60,
+    );
+
     my $top_bar = $listwin->add( 'top_bar', 'Label',
         -fg => 'cyan',
         -bg => 'blue',
