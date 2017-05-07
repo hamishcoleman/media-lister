@@ -31,8 +31,10 @@ sub new_from_name {
     my $object;
     if ( -d $filename ) {
         $object = $class->new($filename);
-    } else {
+    } elsif ( -e $filename ) {
         $object = ListEntry::File->new($filename);
+    } else {
+        return undef;
     }
     return $object;
 }

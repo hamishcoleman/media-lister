@@ -44,6 +44,7 @@ sub RenderValue {
     my @recent = sort { $recent->{$b} <=> $recent->{$a} } keys(%{$recent});
     for (@recent) {
         my $object = ListEntry::SubDir->new_from_name($_);
+        next if (!defined($object));
         $object->seenlist($seenlist);
         $object->use_basename(0);
         push @array, $object;
