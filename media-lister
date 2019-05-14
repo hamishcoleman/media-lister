@@ -44,7 +44,7 @@ sub draw_listbox {
     my $listwin = $cui->add($window_name, 'Window');
 
     my $clock_bar = $listwin->add( 'clock_bar', 'Label',
-        -bg => 'cyan',
+        -bg => 'cyan', # FIXME - colors are not ideal to read
         -fg => 'blue',
         -x => -1,
         -width => 5,
